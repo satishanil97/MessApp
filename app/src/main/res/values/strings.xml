@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MessApp</string>
+    <string name="email_field">Email ID</string>
+    <string name="password_field">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="forgot_password">Forgot Password</string>
+</resources>
