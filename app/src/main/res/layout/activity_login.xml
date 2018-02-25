@@ -18,19 +18,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/email_field"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:paddingTop="10dp"/>
         <EditText
             android:id="@+id/login_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"/>
+            android:paddingTop="10dp"
+            android:inputType="textEmailAddress"/>
         <TextView
             android:id="@+id/password_prompt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/password_field"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:paddingTop="10dp"/>
 
         <EditText

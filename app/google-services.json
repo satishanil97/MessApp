@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "774436101623",
-    "firebase_url": "https://messapp-4b9ce.firebaseio.com",
-    "project_id": "messapp-4b9ce",
-    "storage_bucket": "messapp-4b9ce.appspot.com"
+    "project_number": "190275255711",
+    "firebase_url": "https://messapp-3900c.firebaseio.com",
+    "project_id": "messapp-3900c",
+    "storage_bucket": "messapp-3900c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:774436101623:android:a899b230fcf0670b",
+        "mobilesdk_app_id": "1:190275255711:android:a899b230fcf0670b",
         "android_client_info": {
           "package_name": "com.example.satish.messapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "774436101623-8a4o499hdvmc0e6si7heq25lu6oo4gfn.apps.googleusercontent.com",
+          "client_id": "190275255711-of2l326ocf90mseol7cf9g0m0butaqfr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.satish.messapp",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "774436101623-pukcll2i2hqs9a1pabdm0031dld3puve.apps.googleusercontent.com",
+          "client_id": "190275255711-0oct7gdvffibcp4ba42fcksut4ps7734.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDa0Im-D9Jh172bAfcuP3TrxvBfI4UGf4s"
+          "current_key": "AIzaSyCfDjFJ9AiPCckD3NjBJnInkyHsY8bgDnA"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "774436101623-pukcll2i2hqs9a1pabdm0031dld3puve.apps.googleusercontent.com",
+              "client_id": "190275255711-0oct7gdvffibcp4ba42fcksut4ps7734.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
