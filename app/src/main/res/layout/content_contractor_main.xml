@@ -15,10 +15,216 @@
         android:padding="10dp"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/layout_breakfast"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Contractor Home"/>
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:padding="5dp"
+                android:text="@string/breakfast"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/item_breakfast"
+                android:layout_width="0dp"
+                android:layout_weight="0.75"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:inputType="textNoSuggestions"
+                android:background="@android:color/transparent"
+                android:focusable="false"
+                android:fontFamily="sans-serif"
+                android:textStyle="italic"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_lunch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:padding="5dp"
+                android:text="@string/lunch"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
+                android:textSize="17sp"/>
+
+            <EditText
+                android:id="@+id/item_lunch"
+                android:layout_width="0dp"
+                android:layout_weight="0.75"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:inputType="textNoSuggestions"
+                android:background="@android:color/transparent"
+                android:focusable="false"
+                android:fontFamily="sans-serif"
+                android:textStyle="italic"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_tea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:padding="5dp"
+                android:text="@string/tea"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
+                android:textSize="17sp"/>
+
+            <EditText
+                android:id="@+id/item_tea"
+                android:layout_width="0dp"
+                android:layout_weight="0.75"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:inputType="textNoSuggestions"
+                android:background="@android:color/transparent"
+                android:focusable="false"
+                android:fontFamily="sans-serif"
+                android:textStyle="italic"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_dinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:padding="5dp"
+                android:text="@string/dinner"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
+                android:textSize="17sp"/>
+
+            <EditText
+                android:id="@+id/item_dinner"
+                android:layout_width="0dp"
+                android:layout_weight="0.75"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:inputType="textNoSuggestions"
+                android:background="@android:color/transparent"
+                android:focusable="false"
+                android:fontFamily="sans-serif"
+                android:textStyle="italic"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_rate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:padding="5dp"
+                android:text="@string/rate"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
+                android:textSize="17sp"/>
+
+            <EditText
+                android:id="@+id/item_rate"
+                android:layout_width="0dp"
+                android:layout_weight="0.6"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:inputType="number"
+                android:background="@android:color/transparent"
+                android:focusable="false"
+                android:fontFamily="sans-serif"
+                android:textStyle="italic"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_numOfSeats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:padding="5dp"
+                android:text="@string/numOfSeats"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
+                android:textSize="17sp"/>
+
+            <EditText
+                android:id="@+id/item_numOfSeats"
+                android:layout_width="0dp"
+                android:layout_weight="0.6"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:inputType="number"
+                android:background="@android:color/transparent"
+                android:focusable="false"
+                android:fontFamily="sans-serif"
+                android:textStyle="italic"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_gravity="center"
+            android:text="@string/save"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:background="@drawable/save_button"
+            android:visibility="invisible"/>
 
     </LinearLayout>
 

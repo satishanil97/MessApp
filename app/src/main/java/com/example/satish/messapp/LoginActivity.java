@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
                     SignIn(email,password);
                 }
                 else {
-                    toastMessage("Fill all the fields");
+                    toastMessage("Fill all the fields",0);
                 }
             }
         });
@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                     ForgotPassword(email);
                 }
                 else {
-                    toastMessage("Fill Email");
+                    toastMessage("Fill Email",0);
                 }
             }
         });
@@ -87,11 +87,11 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "Email sent.");
-                            toastMessage("Password Reset Email sent");
+                            toastMessage("Password Reset Email sent",0);
                         }
                         else {
                             Log.d(TAG, "Email verification couldn't be sent");
-                            toastMessage("Internet Problem / Unidentified User");
+                            toastMessage("Internet Problem / Unidentified User",0);
                         }
                     }
                 });
@@ -105,13 +105,13 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            toastMessage("Signed in as " + email);
+                            toastMessage("... Signing in ...",1);
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            toastMessage("Login Failed");
+                            toastMessage("Login Failed",0);
                             updateUI(null);
                         }
 
@@ -136,41 +136,64 @@ public class LoginActivity extends AppCompatActivity {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             final DatabaseReference myRef = database.getReference();
             // Read from the database
-            myRef.addValueEventListener(new ValueEventListener() {
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     // This method is called once with the initial value and again
                     // whenever data at this location is updated.
                     int contractor = 0;
+                    StringBuilder contractorId,rollNo,messId;
+                    contractorId = new StringBuilder("");
+                    messId = new StringBuilder("");
+                    rollNo = new StringBuilder("");
 
                     for(DataSnapshot ds : dataSnapshot.child("users").child("contractor").getChildren()){
                         String emailID = (String) ds.getValue();
                         if(emailID != null && email.equals(emailID)) {
                             contractor = 1;
+                            for(DataSnapshot ds2 : dataSnapshot.child("contractors").getChildren()){
+                                String emailID2 = (String) ds2.child("Email").getValue();
+                                if(emailID2 != null && email.equals(emailID2)) {
+                                    contractorId.append((String) ds2.child("Cid").getValue());
+                                    messId.append((String) ds2.child("MessID").getValue());
+                                    break;
+                                }
+                            }
                             break;
                         }
                     }
 
                     if(contractor == 1) {
                         Intent intent = new Intent(LoginActivity.this,ContractorMain.class);
+                        String Cid = new String(contractorId.toString());
+                        String messID = new String(messId.toString());
+                        intent.putExtra("Cid",Cid);
+                        intent.putExtra("messID",messID);
                         startActivity(intent);
+                        finish();
                     }
 
                     else {
-                        toastMessage("student");
+                        toastMessage("student",0);
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError error) {
                     // Failed to read value
+                    toastMessage("Database Error",0);
                     Log.w(TAG, "Database error", error.toException());
                 }
             });
         }
     }
 
-    private void toastMessage(String message) {
-        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+    private void toastMessage(String message, int length) {
+        if(length == 0)
+            Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+
+        else
+            Toast.makeText(this,message,Toast.LENGTH_LONG).show();
+
     }
 }
