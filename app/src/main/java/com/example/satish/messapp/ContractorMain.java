@@ -21,6 +21,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ContractorMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,21 +37,23 @@ public class ContractorMain extends AppCompatActivity
     private final String Dinner = "Dinner";
     private final String Rate = "Rate";
     private final String NumOfSeats = "NoOfSeats";
+    private final String ListOfStudents = "listOfStudents";
     private final String messes = "messes";
     private StringBuilder breakfast = new StringBuilder("");
     private StringBuilder lunch = new StringBuilder("");
     private StringBuilder tea = new StringBuilder("");
     private StringBuilder dinner = new StringBuilder("");
-    int rate=0,numOfSeats=0,edit = 0;
+    private List<String> listOfStudents = new ArrayList<String>();
+    int rate=0,numOfSeats=0,edit = 0;   //edit = 1 => user is currently editing some field
 
-    private MenuItem menu_item;
+    private MenuItem menu_item; //currently selected item from the navigation drawer
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contractor_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        super.onCreate(savedInstanceState); //auto-generated
+        setContentView(R.layout.activity_contractor_main);  //auto-generated
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //auto-generated
+        setSupportActionBar(toolbar); //auto-generated
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -64,7 +69,7 @@ public class ContractorMain extends AppCompatActivity
         messID = bundle.getString("messID");
 
         // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
+        myRef.addValueEventListener(new ValueEventListener() {  //Function runs whenver there's a change in the database
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
@@ -78,11 +83,12 @@ public class ContractorMain extends AppCompatActivity
                 rate = L.intValue();
                 L = (Long) messDS.child(NumOfSeats).getValue();
                 numOfSeats = L.intValue();
+
                 fillContent();
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(DatabaseError error) { //auto-generated
                 // Failed to read value
                 toastMessage("Database Error",0);
                 Log.w(TAG, "Database error", error.toException());
@@ -92,9 +98,9 @@ public class ContractorMain extends AppCompatActivity
         Button saveButton = (Button) findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {    //when save button is clicked
                 EditText editText = (EditText) findViewById(R.id.item_breakfast);
-                breakfast = new StringBuilder(editText.getText().toString());
+                breakfast = new StringBuilder(editText.getText().toString());   //extract value from the editText field
                 editText = (EditText) findViewById(R.id.item_lunch);
                 lunch = new StringBuilder(editText.getText().toString());
                 editText = (EditText) findViewById(R.id.item_tea);
@@ -102,22 +108,34 @@ public class ContractorMain extends AppCompatActivity
                 editText = (EditText) findViewById(R.id.item_dinner);
                 dinner = new StringBuilder(editText.getText().toString());
 
-                myRef.child(messes).child(messID).child(Breakfast).setValue(breakfast.toString());
+                editText = (EditText) findViewById(R.id.item_rate);
+                rate = Integer.parseInt(editText.getText().toString());
+                editText = (EditText) findViewById(R.id.item_numOfSeats);
+                numOfSeats = Integer.parseInt(editText.getText().toString());
+
+                myRef.child(messes).child(messID).child(Breakfast).setValue(breakfast.toString());  //sets value at that path to new value
                 myRef.child(messes).child(messID).child(Lunch).setValue(lunch.toString());
                 myRef.child(messes).child(messID).child(Tea).setValue(tea.toString());
                 myRef.child(messes).child(messID).child(Dinner).setValue(dinner.toString());
+                myRef.child(messes).child(messID).child(Rate).setValue(rate);
+                myRef.child(messes).child(messID).child(NumOfSeats).setValue(numOfSeats);
 
                 menu_item.setChecked(false);
-                fillContent();
+                fillContent();  //now that we have extracted values from editText fields and updated in database, the UI elements are updated to show changes
             }
         });
     }
 
+    public void getListOfStudents() {   //to be completed
+
+    }
+
     public void fillContent(){
+
         EditText editText = (EditText) findViewById(R.id.item_breakfast);
         editText.setText("");
-        editText.setText(breakfast.toString());
-        editText.setFocusable(false);
+        editText.setText(breakfast.toString()); //set value to current value of breakfast
+        editText.setFocusable(false);   //Set edit-text field to not editable until user clicks on updateMenu option again
 
         editText = (EditText) findViewById(R.id.item_lunch);
         editText.setText("");
@@ -145,14 +163,14 @@ public class ContractorMain extends AppCompatActivity
         editText.setFocusable(false);
 
         Button saveButton = (Button) findViewById(R.id.save_button);
-        saveButton.setVisibility(View.INVISIBLE);
+        saveButton.setVisibility(View.INVISIBLE);   //save-button is hidden since it's not required when user is not editing anything
 
-        edit = 0;
+        edit = 0;   //user is not editing now
     }
 
-    public void updateMenu(){
+    public void updateMenu(){   //function to enable editing Menu
         EditText editText = (EditText) findViewById(R.id.item_breakfast);
-        editText.setFocusableInTouchMode(true);
+        editText.setFocusableInTouchMode(true); //now this becomes editable again
         editText = (EditText) findViewById(R.id.item_lunch);
         editText.setFocusableInTouchMode(true);
         editText = (EditText) findViewById(R.id.item_tea);
@@ -162,37 +180,55 @@ public class ContractorMain extends AppCompatActivity
 
         Button saveButton = (Button) findViewById(R.id.save_button);
         saveButton.setVisibility(View.VISIBLE);
+        edit = 1;   //user wants to edit now
+    }
+
+    public void updateRate() { //function to enable editing Rate
+        EditText editText = (EditText) findViewById(R.id.item_rate);
+        editText.setFocusableInTouchMode(true);
+
+        Button saveButton = (Button) findViewById(R.id.save_button);
+        saveButton.setVisibility(View.VISIBLE);
+        edit = 1;
+    }
+
+    public void updateSeats() { //function to enable editing number of Seats
+        EditText editText = (EditText) findViewById(R.id.item_numOfSeats);
+        editText.setFocusableInTouchMode(true);
+
+        Button saveButton = (Button) findViewById(R.id.save_button);
+        saveButton.setVisibility(View.VISIBLE);
         edit = 1;
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed() {   //Inbuilt function that handles backbutton presses
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer.isDrawerOpen(GravityCompat.START)) { //if drawer is open, close it
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if(edit == 1) {
+            if(edit == 1) { //if user was editing something and decided to cancel it by pressing back-button
                 edit = 0;
-                fillContent();
-                menu_item.setChecked(false);
+                fillContent();  //set Content back to most recently saved values
+                menu_item.setChecked(false);    //uncheck the option (the option in the drawer) chosen by user
             }
 
             else {
-                super.onBackPressed();
+                super.onBackPressed();  //default action on back-button press (which is exiting the app)
             }
 
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) { //auto-generated
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.contractor_main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) { //auto-generated
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -208,23 +244,40 @@ public class ContractorMain extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item) { //auto-generated
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        fillContent();  //reload last saved content before proceeding
         menu_item = item;
         menu_item.setChecked(true);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
-        if (id == R.id.nav_menu) {
+        if (id == R.id.nav_menu) {  //if user chose update Menu option
+            /*LinearLayout ll = (LinearLayout) findViewById(R.id.contractor_main_layout);
+            ll.setVisibility(View.VISIBLE);
+
+            ll = (LinearLayout) findViewById(R.id.student_list_layout);
+            ll.setVisibility(View.GONE);*/
+
             updateMenu();
+
         } else if (id == R.id.nav_rate) {
 
+            updateRate();
+
         } else if (id == R.id.nav_updateSeats) {
+            updateSeats();
 
         } else if (id == R.id.nav_listOfStudents) {
+            /*LinearLayout ll = (LinearLayout) findViewById(R.id.contractor_main_layout);
+            ll.setVisibility(View.GONE);
 
+            ll = (LinearLayout) findViewById(R.id.student_list_layout);
+            ll.setVisibility(View.VISIBLE);
+
+            getListOfStudents();*/
         }
 
         return true;
