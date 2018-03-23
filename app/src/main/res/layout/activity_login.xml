@@ -40,18 +40,21 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:paddingTop="10dp" />
+
         <Button
             android:id="@+id/sign_in_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="@string/sign_in"
-            android:paddingTop="10dp"/>
+            android:background="@drawable/sign_in_button"/>
         <Button
             android:id="@+id/forgot_password_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/forgot_password"
-            android:paddingTop="10dp"/>
+            android:layout_marginTop="6dp"
+            android:background="@drawable/forgot_password_button"/>
 
     </LinearLayout>
 

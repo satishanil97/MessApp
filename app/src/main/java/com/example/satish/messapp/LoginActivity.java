@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //UI references
     private EditText mEmail,mPassword;
+    Button btnSignIn, btnForgotPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {    //auto-generated -- this function works when the Activity is spawned
@@ -35,7 +37,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);    //auto-generated
 
         //declare buttons and AutoCompleteTextViews in onCreate
-        Button btnSignIn, btnForgotPassword;
         //UI elements and layout for this activity is specified in res/layout/activity_login.xml
         mEmail = (EditText) findViewById(R.id.login_email); //The Editable textfield for entering email
         mPassword = (EditText) findViewById(R.id.login_password);
@@ -76,8 +77,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onStart() { //auto-generated
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        /*FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);*/
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
     }
 
     private void ForgotPassword(String email) {
@@ -106,7 +107,6 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            toastMessage("... Signing in ...",1);
                             FirebaseUser user = mAuth.getCurrentUser(); //gets cuurently logged in user
                             updateUI(user);
                         } else {
@@ -123,6 +123,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
+            LinearLayout ll = (LinearLayout) findViewById(R.id.login_layout);
+            ll.setAlpha((float) 0.4);
+            mEmail.setFocusable(false);
+            mPassword.setFocusable(false);
+            btnSignIn.setClickable(false);
+            btnForgotPassword.setClickable(false);
+            toastMessage("... Signing in ...",0);
             // email address
             final String email = user.getEmail();
 

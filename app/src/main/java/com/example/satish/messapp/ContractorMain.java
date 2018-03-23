@@ -1,5 +1,6 @@
 package com.example.satish.messapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,10 +12,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class ContractorMain extends AppCompatActivity
@@ -45,6 +51,7 @@ public class ContractorMain extends AppCompatActivity
     private StringBuilder dinner = new StringBuilder("");
     private List<String> listOfStudents = new ArrayList<String>();
     int rate=0,numOfSeats=0,edit = 0;   //edit = 1 => user is currently editing some field
+    private boolean signedOut = false;
 
     private MenuItem menu_item; //currently selected item from the navigation drawer
 
@@ -84,14 +91,22 @@ public class ContractorMain extends AppCompatActivity
                 L = (Long) messDS.child(NumOfSeats).getValue();
                 numOfSeats = L.intValue();
 
+                listOfStudents.clear(); //clear all contents of the array
+
+                for(DataSnapshot ds : messDS.child(ListOfStudents).getChildren()) {
+                    listOfStudents.add(ds.getValue().toString());
+                }
+
                 fillContent();
             }
 
             @Override
             public void onCancelled(DatabaseError error) { //auto-generated
                 // Failed to read value
-                toastMessage("Database Error",0);
-                Log.w(TAG, "Database error", error.toException());
+                if(!signedOut) {
+                    toastMessage("Database Error",0);
+                    Log.w(TAG, "Database error", error.toException());
+                }
             }
         });
 
@@ -99,38 +114,63 @@ public class ContractorMain extends AppCompatActivity
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {    //when save button is clicked
-                EditText editText = (EditText) findViewById(R.id.item_breakfast);
-                breakfast = new StringBuilder(editText.getText().toString());   //extract value from the editText field
-                editText = (EditText) findViewById(R.id.item_lunch);
-                lunch = new StringBuilder(editText.getText().toString());
-                editText = (EditText) findViewById(R.id.item_tea);
-                tea = new StringBuilder(editText.getText().toString());
-                editText = (EditText) findViewById(R.id.item_dinner);
-                dinner = new StringBuilder(editText.getText().toString());
+                Calendar cal = Calendar.getInstance();
+                int hourofday = cal.get(Calendar.HOUR_OF_DAY);
 
-                editText = (EditText) findViewById(R.id.item_rate);
-                rate = Integer.parseInt(editText.getText().toString());
-                editText = (EditText) findViewById(R.id.item_numOfSeats);
-                numOfSeats = Integer.parseInt(editText.getText().toString());
+                if(hourofday >= 17 && hourofday <= 20) {    //if time is between 17:00 and 21:00 contractor cannot change mess details
+                    toastMessage("Update Failed as Booking Period has begun",0);
+                }
 
-                myRef.child(messes).child(messID).child(Breakfast).setValue(breakfast.toString());  //sets value at that path to new value
-                myRef.child(messes).child(messID).child(Lunch).setValue(lunch.toString());
-                myRef.child(messes).child(messID).child(Tea).setValue(tea.toString());
-                myRef.child(messes).child(messID).child(Dinner).setValue(dinner.toString());
-                myRef.child(messes).child(messID).child(Rate).setValue(rate);
-                myRef.child(messes).child(messID).child(NumOfSeats).setValue(numOfSeats);
+                else {
+                    EditText editText = (EditText) findViewById(R.id.item_breakfast);
+                    breakfast = new StringBuilder(editText.getText().toString());   //extract value from the editText field
+                    editText = (EditText) findViewById(R.id.item_lunch);
+                    lunch = new StringBuilder(editText.getText().toString());
+                    editText = (EditText) findViewById(R.id.item_tea);
+                    tea = new StringBuilder(editText.getText().toString());
+                    editText = (EditText) findViewById(R.id.item_dinner);
+                    dinner = new StringBuilder(editText.getText().toString());
 
-                menu_item.setChecked(false);
-                fillContent();  //now that we have extracted values from editText fields and updated in database, the UI elements are updated to show changes
+                    editText = (EditText) findViewById(R.id.item_rate);
+                    rate = Integer.parseInt(editText.getText().toString());
+                    editText = (EditText) findViewById(R.id.item_numOfSeats);
+                    numOfSeats = Integer.parseInt(editText.getText().toString());
+
+                    myRef.child(messes).child(messID).child(Breakfast).setValue(breakfast.toString());  //sets value at that path to new value
+                    myRef.child(messes).child(messID).child(Lunch).setValue(lunch.toString());
+                    myRef.child(messes).child(messID).child(Tea).setValue(tea.toString());
+                    myRef.child(messes).child(messID).child(Dinner).setValue(dinner.toString());
+                    myRef.child(messes).child(messID).child(Rate).setValue(rate);
+                    myRef.child(messes).child(messID).child(NumOfSeats).setValue(numOfSeats);
+
+                    menu_item.setChecked(false);
+                }
             }
         });
     }
 
     public void getListOfStudents() {   //to be completed
+        LinearLayout ll = (LinearLayout) findViewById(R.id.contractor_main_layout);
+        ll.setVisibility(View.GONE);
 
+        ll = (LinearLayout) findViewById(R.id.student_list_layout);
+        ll.setVisibility(View.VISIBLE);
+
+        ListView lv = (ListView) findViewById(R.id.list_of_students);
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.listrow, listOfStudents);
+        lv.setAdapter(arrayAdapter);
+
+        edit = 1; //this is not because we're editing anything but rather to go back to displaying mess details on hitting back button
+        //see onBackPressed()
     }
 
     public void fillContent(){
+        LinearLayout ll = (LinearLayout) findViewById(R.id.contractor_main_layout);
+        ll.setVisibility(View.VISIBLE); //we want to show only the mess data and not the student list
+
+        ll = (LinearLayout) findViewById(R.id.student_list_layout);
+        ll.setVisibility(View.GONE);
 
         EditText editText = (EditText) findViewById(R.id.item_breakfast);
         editText.setText("");
@@ -169,6 +209,12 @@ public class ContractorMain extends AppCompatActivity
     }
 
     public void updateMenu(){   //function to enable editing Menu
+        LinearLayout ll = (LinearLayout) findViewById(R.id.contractor_main_layout);
+        ll.setVisibility(View.VISIBLE);
+
+        ll = (LinearLayout) findViewById(R.id.student_list_layout);
+        ll.setVisibility(View.GONE);
+
         EditText editText = (EditText) findViewById(R.id.item_breakfast);
         editText.setFocusableInTouchMode(true); //now this becomes editable again
         editText = (EditText) findViewById(R.id.item_lunch);
@@ -184,6 +230,12 @@ public class ContractorMain extends AppCompatActivity
     }
 
     public void updateRate() { //function to enable editing Rate
+        LinearLayout ll = (LinearLayout) findViewById(R.id.contractor_main_layout);
+        ll.setVisibility(View.VISIBLE);
+
+        ll = (LinearLayout) findViewById(R.id.student_list_layout);
+        ll.setVisibility(View.GONE);
+
         EditText editText = (EditText) findViewById(R.id.item_rate);
         editText.setFocusableInTouchMode(true);
 
@@ -193,6 +245,12 @@ public class ContractorMain extends AppCompatActivity
     }
 
     public void updateSeats() { //function to enable editing number of Seats
+        LinearLayout ll = (LinearLayout) findViewById(R.id.contractor_main_layout);
+        ll.setVisibility(View.VISIBLE);
+
+        ll = (LinearLayout) findViewById(R.id.student_list_layout);
+        ll.setVisibility(View.GONE);
+
         EditText editText = (EditText) findViewById(R.id.item_numOfSeats);
         editText.setFocusableInTouchMode(true);
 
@@ -235,7 +293,12 @@ public class ContractorMain extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_signout) {    //to handle sign-out
+            FirebaseAuth.getInstance().signOut();   //signs out
+            signedOut = true;
+            Intent intent = new Intent(ContractorMain.this,LoginActivity.class);
+            startActivity(intent);  //starts LoginActivity
+            finish();
             return true;
         }
 
@@ -254,30 +317,27 @@ public class ContractorMain extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
+        Calendar cal = Calendar.getInstance();
+        int hourofday = cal.get(Calendar.HOUR_OF_DAY);
+
+        if(hourofday >= 17 && hourofday <= 20) {    //if time is between 17:00 and 21:00 contractor cannot change mess details
+            toastMessage("This Action Is Blocked in Booking Hours",0);
+            menu_item.setChecked(false);
+            return true;
+        }
+
         if (id == R.id.nav_menu) {  //if user chose update Menu option
-            /*LinearLayout ll = (LinearLayout) findViewById(R.id.contractor_main_layout);
-            ll.setVisibility(View.VISIBLE);
-
-            ll = (LinearLayout) findViewById(R.id.student_list_layout);
-            ll.setVisibility(View.GONE);*/
-
             updateMenu();
 
         } else if (id == R.id.nav_rate) {
-
             updateRate();
 
         } else if (id == R.id.nav_updateSeats) {
             updateSeats();
 
         } else if (id == R.id.nav_listOfStudents) {
-            /*LinearLayout ll = (LinearLayout) findViewById(R.id.contractor_main_layout);
-            ll.setVisibility(View.GONE);
+            getListOfStudents();
 
-            ll = (LinearLayout) findViewById(R.id.student_list_layout);
-            ll.setVisibility(View.VISIBLE);
-
-            getListOfStudents();*/
         }
 
         return true;

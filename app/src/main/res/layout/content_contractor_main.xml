@@ -233,11 +233,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="10dp"
         android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/list_of_students"
+            android:textSize="20sp"
+            android:textColor="#000000"
+            android:textAlignment="center"
+            android:background="#ffcc66"
+            android:height="60dp"
+            android:padding="10dp"/>
 
         <ListView
             android:id="@+id/list_of_students"
+            android:paddingBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:dividerHeight="1dp"
@@ -246,7 +257,9 @@
             android:smoothScrollbar="true"
             android:stretchMode="columnWidth"
             android:verticalSpacing="3dp"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginBottom="30dp"
+            android:textAlignment="center"
+            android:divider="#c8c8c8" />
 
     </LinearLayout>
 
