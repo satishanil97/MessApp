@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +35,7 @@ public class ContractorMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = "ContractorActivity";
-    final DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+    private final DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
 
     private String Cid,messID;
     private final String Breakfast = "Breakfast";
@@ -50,7 +51,7 @@ public class ContractorMain extends AppCompatActivity
     private StringBuilder tea = new StringBuilder("");
     private StringBuilder dinner = new StringBuilder("");
     private List<String> listOfStudents = new ArrayList<String>();
-    int rate=0,numOfSeats=0,edit = 0;   //edit = 1 => user is currently editing some field
+    private int rate=0,numOfSeats=0,edit = 0;   //edit = 1 => user is currently editing some field
     private boolean signedOut = false;
 
     private MenuItem menu_item; //currently selected item from the navigation drawer
@@ -90,6 +91,11 @@ public class ContractorMain extends AppCompatActivity
                 rate = L.intValue();
                 L = (Long) messDS.child(NumOfSeats).getValue();
                 numOfSeats = L.intValue();
+
+                TextView tv = (TextView) findViewById(R.id.NavContractorName);
+                tv.setText(dataSnapshot.child("contractors").child(Cid).child("Cname").getValue().toString());
+                tv = (TextView) findViewById(R.id.NavContractorMess);
+                tv.setText(messDS.child("MessName").getValue().toString());
 
                 listOfStudents.clear(); //clear all contents of the array
 
@@ -259,6 +265,14 @@ public class ContractorMain extends AppCompatActivity
         edit = 1;
     }
 
+    public void signOut() {
+        FirebaseAuth.getInstance().signOut();   //signs out
+        signedOut = true;
+        Intent intent = new Intent(ContractorMain.this,LoginActivity.class);
+        startActivity(intent);  //starts LoginActivity
+        finish();
+    }
+
     @Override
     public void onBackPressed() {   //Inbuilt function that handles backbutton presses
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -294,11 +308,7 @@ public class ContractorMain extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_signout) {    //to handle sign-out
-            FirebaseAuth.getInstance().signOut();   //signs out
-            signedOut = true;
-            Intent intent = new Intent(ContractorMain.this,LoginActivity.class);
-            startActivity(intent);  //starts LoginActivity
-            finish();
+            signOut();
             return true;
         }
 
@@ -320,13 +330,17 @@ public class ContractorMain extends AppCompatActivity
         Calendar cal = Calendar.getInstance();
         int hourofday = cal.get(Calendar.HOUR_OF_DAY);
 
+        if(id == R.id.nav_contractor_logout) {
+            signOut();
+        }
+
         if(hourofday >= 17 && hourofday <= 20) {    //if time is between 17:00 and 21:00 contractor cannot change mess details
             toastMessage("This Action Is Blocked in Booking Hours",0);
             menu_item.setChecked(false);
             return true;
         }
 
-        if (id == R.id.nav_menu) {  //if user chose update Menu option
+        else if (id == R.id.nav_menu) {  //if user chose update Menu option
             updateMenu();
 
         } else if (id == R.id.nav_rate) {
@@ -337,7 +351,6 @@ public class ContractorMain extends AppCompatActivity
 
         } else if (id == R.id.nav_listOfStudents) {
             getListOfStudents();
-
         }
 
         return true;

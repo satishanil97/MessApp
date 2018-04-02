@@ -24,4 +24,16 @@
     <string name="dinner">Dinner</string>
     <string name="rate">Daily Rate</string>
     <string name="numOfSeats">No: of Seats</string>
+    <string name="title_activity_student">StudentActivity</string>
+    <string name="book">Book</string>
+    <string name="not_booked">Booking Not Done</string>
+
+    <string name="mess_prompt">Select mess</string>
+
+    <string-array name="mess_arrays">
+        <item>Select Mess</item>
+        <item>B</item>
+        <item>D</item>
+    </string-array>
+
 </resources>

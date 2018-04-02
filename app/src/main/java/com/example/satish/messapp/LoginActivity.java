@@ -149,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {   //auto-generated
                     // This method is called once with the initial value and again
                     // whenever data at this location is updated.
-                    int contractor = 0;
+                    int contractor = 0, student = 0;
                     StringBuilder contractorId,rollNo,messId;
                     contractorId = new StringBuilder("");
                     messId = new StringBuilder("");
@@ -182,7 +182,26 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     else {  //student activity to be completed
-                        toastMessage("student",0);
+                        for(DataSnapshot ds : dataSnapshot.child("users").child("student").getChildren()){   //datasnapshot stores the state of the database at that point
+                            String emailID = (String) ds.getValue();
+                            if(emailID != null && email.equals(emailID)) {
+                                student = 1; //if the email is found under contractor branch, then then user is a contractor
+                                rollNo.append((String) ds.getKey());
+                                break;
+                            }
+                        }
+
+                        if(student == 1) {
+                            Intent intent = new Intent(LoginActivity.this,StudentActivity.class);
+                            String RollNo = new String(rollNo.toString());
+                            intent.putExtra("RollNo",RollNo); //pass Cid to Contractor Activity
+                            startActivity(intent);  //start Contractor Activity
+                            finish();   //exit cuurent activity => Login Activity is finished
+                        }
+
+                        else {
+                            toastMessage("Unknown Error",0);
+                        }
                     }
                 }
 

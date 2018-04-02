@@ -20,17 +20,17 @@
         app:srcCompat="@drawable/ic_person_white_24dp" />
 
     <TextView
-        android:id="@+id/NavContractorName"
+        android:id="@+id/NavStdName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Contractor Name"
+        android:text="Student Name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/NavContractorMess"
+        android:id="@+id/NavStdRollno"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mess Name" />
+        android:text="Student Roll Number" />
 
 </LinearLayout>

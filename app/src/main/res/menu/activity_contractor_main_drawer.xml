@@ -22,4 +22,14 @@
             android:title="@string/list_of_students" />
     </group>
 
+    <item android:title="Other Options">
+        <menu>
+            <item
+                android:id="@+id/nav_contractor_logout"
+                android:icon="@drawable/ic_person_black_24px"
+                android:title="Sign Out" />
+
+        </menu>
+    </item>
+
 </menu>
